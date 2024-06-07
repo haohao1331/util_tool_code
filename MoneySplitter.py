@@ -1,4 +1,17 @@
 # 出去玩算钱计算器
+'''
+event.add_transaction(spender=P.leo, cost_map={
+        P.jayden: 15 + (6 + 4 + 5) / len(P),
+        P.verona: 12 + (6 + 4 + 5) / len(P),
+        P.charles: 15 + (6 + 4 + 5) / len(P),
+        P.leo: 17 + (6 + 4 + 5) / len(P), 
+        P.cheryl: (6 + 4 + 5) / len(P)
+    }, amount=92.69, comment='mian')
+
+event.add_transaction(spender=leo,   people=all, amount=30, comment='Gyubee')
+'''
+from collections.abc import Iterator
+from enum import Enum
 
 output = []
 def _print(x):
@@ -10,13 +23,13 @@ def end(format=None):
     global output
     if format == None:
         with open(__file__, 'a') as f:
-            f.write(f"\n\n'''\nOUTPUT\n{'\n'.join(output)}\n\'\'\'")
+            f.write(f"\n\n'''\nOUTPUT\n" + '\n'.join(output) + "\n'''")
             pass
     elif type(format) == str:
         with open(format, 'w+') as f:
-            f.write(f"\n\n'''\nOUTPUT\n{'\n'.join(output)}\n\'\'\'")
+            f.write(f"\n\n'''\nOUTPUT\n" + '\n'.join(output) + "\n'''")
     else:
-        print(f"\n\n'''\nOUTPUT\n{'\n'.join(output)}\n\'\'\'")
+        print(f"\n\n'''\nOUTPUT\n" + '\n'.join(output) + "\n'''")
 
 def exclude(all, exclude : list):
     out = all + []
@@ -47,7 +60,7 @@ class Event:
         if len(set(people).union(set(self.people.keys()))) > len(self.people.keys()):
             print(people)
             raise Exception('Invalid people in events')
-        self.transactions.append(Transaction(spender=spender, people=people, amount=amount, comment=comment, cost_map=cost_map));
+        self.transactions.append(Transaction(spender=spender, people=people, amount=amount, comment=comment, cost_map=cost_map))
     
     def calculate_summary(self):
         for t in self.transactions:
@@ -96,38 +109,51 @@ class Event:
             
     def print_transactions(self):
         pass
-        
+
+class P(Enum):
+    leo = "leo"
+    charles = "charles"
+    verona = "verona"
+    cheryl = "cheryl"
+    jayden = "jayden"
+    
+    def __str__(self):
+        return self.value
+    
+    def __repr__(self):
+        return self.value
+    
+    def all():
+        return [P.leo, P.charles, P.verona, P.cheryl, P.jayden]
+
+    def __len__(self) -> int:
+        return super().__len__()
                     
 if __name__ == "__main__":
-    maria = "maria"
-    young = "young"
-    scott = "scott"
-    leo = "leo"
-    all = [maria, young, scott, leo]
-
-    event = Event(all)
+    event = Event(P.all())
 
     # event.add_transaction(spender=, people=, amount=, comment='')
-    event.add_transaction(spender=leo,   people=all, amount=30, comment='Gyubee')
-    event.add_transaction(spender=scott,   people=all, amount=10, comment='Gyubee')
-    event.add_transaction(spender=maria,   people=all, amount=80, comment='Gyubee')
-    event.add_transaction(spender=young,   people=all, amount=95, comment='Gyubee')
-    event.add_transaction(spender=maria,   people=all, amount=38, comment='shu yi')
-    event.add_transaction(spender=maria,   people=all, amount=73, comment='mah jong')
+    event.add_transaction(spender=P.leo, cost_map={
+        P.jayden: 15 + (6 + 4 + 5) / len(P),
+        P.verona: 12 + (6 + 4 + 5) / len(P),
+        P.charles: 15 + (6 + 4 + 5) / len(P),
+        P.leo: 17 + (6 + 4 + 5) / len(P), 
+        P.cheryl: (6 + 4 + 5) / len(P)
+    }, amount=92.69, comment='mian')
     event.calculate_summary()
     end()
-
-
 '''
 OUTPUT
 people		should spend	spent		difference
-maria		81.5		    191		    109.5
-young		81.5		    95		    13.5
-scott		81.5		    10		    -71.5
-leo		    81.5		    30		    -51.5
+leo		25.05		92.69		67.64
+charles		22.55		0		-22.55
+verona		18.79		0		-18.79
+cheryl		3.76		0		-3.76
+jayden		22.55		0		-22.55
 
 
-leo give maria $51.5
-scott give maria $58.0
-scott give young $13.5
+cheryl give leo $3.76
+verona give leo $18.79
+charles give leo $22.55
+jayden give leo $22.55
 '''
